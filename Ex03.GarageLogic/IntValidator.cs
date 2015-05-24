@@ -17,7 +17,7 @@
 			int value = int.Parse(i_Value);
 			if (value < r_Min || value > r_Max)
 			{
-				throw new ValueOutOfRangeException<int>(value, r_Min, r_Max);
+				throw new ValueOutOfRangeException(value, r_Min, r_Max);
 			}
 
 			return value.ToString();

@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 			float value = float.Parse(i_Value);
 			if (value < this.r_Min || value > this.r_Max)
 			{
-				throw new ValueOutOfRangeException<float>(value, this.r_Min, this.r_Max);
+				throw new ValueOutOfRangeException(value, this.r_Min, this.r_Max);
 			}
 
 			return value.ToString(CultureInfo.CurrentCulture);

@@ -54,12 +54,21 @@
 
 		string IPropertyValidator.ValidateValue(string i_Value)
 		{
-			if (Array.IndexOf(this.r_ChoiceOptions, i_Value) == -1)
+			string result = null;
+			foreach (string option in r_ChoiceOptions)
+			{
+				if (string.Compare(option, i_Value, StringComparison.CurrentCultureIgnoreCase) == 0)
+				{
+					result = option;
+				}
+			}
+
+			if (result == null)
 			{
 				throw new ArgumentException("Value not in choice options");
 			}
 
-			return Value;
+			return result;
 		}
 	}
 }

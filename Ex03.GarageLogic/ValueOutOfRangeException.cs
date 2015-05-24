@@ -2,11 +2,11 @@
 
 namespace Ex03.GarageLogic
 {
-	public class ValueOutOfRangeException<T> : Exception
+	public class ValueOutOfRangeException : Exception
 	{
-		private readonly T r_Value;
+		private readonly float r_Value;
 
-		public T Value
+		public float Value
 		{
 			get
 			{
@@ -14,9 +14,9 @@ namespace Ex03.GarageLogic
 			}
 		}
 
-		private readonly T r_Min;
+		private readonly float r_Min;
 
-		public T Min
+		public float Min
 		{
 			get
 			{
@@ -24,9 +24,9 @@ namespace Ex03.GarageLogic
 			}
 		}
 
-		private readonly T r_Max;
+		private readonly float r_Max;
 
-		public T Max
+		public float Max
 		{
 			get
 			{
@@ -34,7 +34,7 @@ namespace Ex03.GarageLogic
 			}
 		}
 
-		public ValueOutOfRangeException(T i_Value, T i_Min, T i_Max) : base("Value out of range")
+		public ValueOutOfRangeException(float i_Value, float i_Min, float i_Max) : base("Value out of range")
 		{
 			r_Value = i_Value;
 			r_Min = i_Min;

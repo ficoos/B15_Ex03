@@ -63,7 +63,7 @@ namespace Ex03.GarageLogic
 			return new VehicleInfo(
 				i_Id,
 				i_Owner,
-				new FuelTank(v_MaxEnergy, v_MaxEnergy, eFuelType.Octan98),
+				new FuelTank(0, v_MaxEnergy, eFuelType.Octan98),
 				cloneWheels(new WheelInfo(v_MaxAirPressure), v_NumOfWheels),
 				extraProperties.ToArray());
 		}
@@ -78,7 +78,7 @@ namespace Ex03.GarageLogic
 			return new VehicleInfo(
 				i_Id,
 				i_Owner,
-				new FuelTank(v_MaxEnergy, v_MaxEnergy, eFuelType.Octan96),
+				new FuelTank(0, v_MaxEnergy, eFuelType.Octan96),
 				cloneWheels(new WheelInfo(v_MaxAirPressure), v_NumOfWheels),
 				extraProperties.ToArray());
 		}
@@ -95,7 +95,7 @@ namespace Ex03.GarageLogic
 			return new VehicleInfo(
 				i_Id,
 				i_Owner,
-				new FuelTank(v_MaxEnergy, v_MaxEnergy, eFuelType.Soler),
+				new FuelTank(0, v_MaxEnergy, eFuelType.Soler),
 				cloneWheels(new WheelInfo(v_MaxAirPressure), v_NumOfWheels),
 				extraProperties.ToArray());
 		}
@@ -110,7 +110,7 @@ namespace Ex03.GarageLogic
 			return new VehicleInfo(
 				i_Id,
 				i_Owner,
-				new VehicleBattery(v_MaxEnergy, v_MaxEnergy), 
+				new VehicleBattery(0, v_MaxEnergy), 
 				cloneWheels(new WheelInfo(v_MaxAirPressure), v_NumOfWheels),
 				extraProperties.ToArray());
 		}
@@ -125,7 +125,7 @@ namespace Ex03.GarageLogic
 			return new VehicleInfo(
 				i_Id,
 				i_Owner,
-				new VehicleBattery(v_MaxEnergy, v_MaxEnergy),
+				new VehicleBattery(0, v_MaxEnergy),
 				cloneWheels(new WheelInfo(v_MaxAirPressure), v_NumOfWheels),
 				extraProperties.ToArray());
 		}

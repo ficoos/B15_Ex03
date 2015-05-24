@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
 			{
 				if (value < 0 || value > r_MaxAirPressure)
 				{
-					throw new ValueOutOfRangeException<float>(value, 0, MaxAirPressure);
+					throw new ValueOutOfRangeException(value, 0, MaxAirPressure);
 				}
 
 				this.m_AirPressure = value;

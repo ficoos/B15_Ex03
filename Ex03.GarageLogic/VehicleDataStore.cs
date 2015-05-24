@@ -25,6 +25,14 @@ namespace Ex03.GarageLogic
 			}
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				return r_Vehicles.Count == 0;
+			}
+		}
+
 		public VehicleDataStore()
 		{
 			r_Vehicles = new Dictionary<string, VehicleInfo>();

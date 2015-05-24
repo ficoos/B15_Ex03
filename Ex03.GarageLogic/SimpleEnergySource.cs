@@ -29,7 +29,7 @@ namespace Ex03.GarageLogic
 			float targetAmount = EnergyLeft + i_Amount;
 			if (targetAmount > r_MaxEnergy)
 			{
-				throw new ValueOutOfRangeException<float>(i_Amount, 0, MaxEnergy);
+				throw new ValueOutOfRangeException(i_Amount, 0, MaxEnergy);
 			}
 
 			EnergyLeft = targetAmount;
