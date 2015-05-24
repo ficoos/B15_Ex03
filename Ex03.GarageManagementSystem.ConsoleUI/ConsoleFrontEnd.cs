@@ -46,9 +46,13 @@ namespace Ex03.GarageManagementSystem.ConsoleUI
 			int wheelCounter = 1;
 			foreach (WheelInfo wheelInfo in i_Wheels)
 			{
-				Console.WriteLine("* Wheel {0}", wheelCounter);
-				Console.WriteLine("\tManufacturer: {0}", wheelInfo.ManufacturerName);
-				Console.WriteLine("\tCurrent Air Pressure: {0}", wheelInfo.AirPressure);
+				Console.WriteLine(
+@"* Wheel {0}
+	Manufacturer: {1}
+	Current Air Pressure: {2}",
+					wheelCounter,
+					wheelInfo.ManufacturerName,
+					wheelInfo.AirPressure);
 				wheelCounter++;
 			}
 		}
