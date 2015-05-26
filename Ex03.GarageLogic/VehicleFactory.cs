@@ -130,6 +130,15 @@ namespace Ex03.GarageLogic
 				extraProperties.ToArray());
 		}
 
+		/// <summary>
+		/// Create a vehicle from a type
+		/// </summary>
+		/// <param name="i_VehicleType">type of the vehicle, on of the strings returned by <see cref="AvailableVehicleTypes"/>.</param>
+		/// <param name="i_Id">The license number of the car.</param>
+		/// <param name="i_Owner">The owner information.</param>
+		/// <returns>A new properly intialized <see cref="VehicleInfo"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">i_VehicleType is null.</exception>
+		/// <exception cref="System.Collections.Generic.KeyNotFoundException">The vehicle type is unknown to the factory.</exception>
 		public static VehicleInfo CreateVehicle(string i_VehicleType, string i_Id, OwnerInfo i_Owner)
 		{
 			return sr_AvailableVehicles[i_VehicleType].Invoke(i_Id, i_Owner);
