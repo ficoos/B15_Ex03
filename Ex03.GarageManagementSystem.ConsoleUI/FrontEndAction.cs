@@ -1,6 +1,6 @@
 ﻿namespace Ex03.GarageManagementSystem.ConsoleUI
 {
-	public struct FrontEndAction
+	internal struct FrontEndAction
 	{
 		public delegate void FrontEndActionDelegate();
 
