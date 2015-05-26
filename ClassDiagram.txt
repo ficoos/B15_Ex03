@@ -1,0 +1,148 @@
+@startuml
+
+title Maor, Saggi and sons Garage - Class Diagram
+
+
+class OwnerInfo {
+    Name string
+    PhoneNumber string
+}
+
+class WheelInfo {
+    ManufacturerName string
+    AirPressure float
+    MaxAirPressure float
+    void Inflate(float i_Amount)
+}
+
+interface IEnergySource {
+    PercentLeft float
+    EnergyLeft float
+    MaxEnergy float
+}
+
+class FuelTank implements IEnergySource {
+    FuelType eFuleType
+    LitersLeft float
+    TankCapacityInLiters float
+}
+
+class VehicleBattery implements IEnergySource {
+    ChargeLeftInSourceInHours float
+    MaxChageDurationInHours float
+    Charge(float i_Hours)
+}
+
+class VehicleInfo {
+    Owner OwnerInfo
+    FixStatus eFixStatus
+    Wheels IEnumerable<WheelInfo>
+    IEnergySource EnergySource
+    ExtraProperties IEnumerable<IExtraProperty>
+    Id string
+    ctor(string i_Id, OwnerInfo i_Owner, IEnergySource i_EnergySource, WheelInfo[] i_Wheels, IExtraProperty[] i_ExtraProperties)
+}
+
+interface IExtraProperty {
+    Name string
+    Value string
+    InputHint string
+}
+
+interface IMultipleChoiceExtraProperty extends IExtraProperty {
+    ChoiceOptions IEnumerable<string>
+}
+
+class SimpleExtraProperty implements IExtraProperty {
+    ctor(string i_Name, string i_InputHint, IPropertyValidator i_Validator)
+}
+
+class SimpleMultipleChoiceProperty implements IMultipleChoiceExtraProperty {
+}
+
+class MultipleChoiceValidator implements IPropertyValidator {
+}
+
+class ValueOutOfRangeException extends Exception {
+    Min float
+    Max float
+}
+
+enum eFixStatus {
+    Fixing
+    Fixed
+    Payed
+}
+
+enum eFuelType {
+    Octan98,
+    Octan96
+    Octan95
+    Soler
+}
+
+interface IPropertyValidator {
+    ValidateValue(string i_Value) void
+}
+
+class FloatValidator implements IPropertyValidator {
+    ctor(float i_Min, float i_Max)
+}
+
+class IntValidator implements IPropertyValidator {
+    ctor(int i_Min, int i_Max)
+}
+
+class YesNoValidator implements IPropertyValidator {
+}
+
+class NonEmptyStringValidator implements IPropertyValidator {
+}
+
+class VehicleDataStore {
+    AvaialableVehicleTypes IEnumerable<string>
+    IsEmpty bool
+    IEnumerable<vehicle> GetVehiclesFilteredByFixStatus(eFixStatus i_FixStatus)
+    vehicle CreateVehicle(string i_VehicleType, string i_Id, OwnerInfo i_OwnerInfo) VehicleInfo
+    vehicle FindVehicle(string i_Id)
+}
+
+class VehicleFactory {
+    vehicle CreateVehicle(string i_VehicleType, string i_Id, OwnerInfo i_OwnerInfo)
+}
+
+class LimitedContainer {
+    PercentLeft float
+    AmountLeft float
+    MaxAmount float
+    ctor(float i_MaxAmount, float i_InitialAmount)
+    void AddAmount(float i_Amount)
+}
+
+WheelInfo "1" *-up- "1" LimitedContainer
+FuelTank "1" *-up- "1" LimitedContainer
+FuelTank "1" *-up- "1" eFuelType
+VehicleBattery "1" *-up- "1" LimitedContainer
+VehicleDataStore "1" *-up- "1" VehicleFactory
+VehicleDataStore "1" *-up- "many" VehicleInfo
+VehicleInfo "1" *-up- "many" WheelInfo
+VehicleInfo "1" *-up- "many" IExtraProperty
+VehicleInfo "1" *-up- "1" IEnergySource
+VehicleInfo "1" *-up- "1" OwnerInfo
+VehicleInfo "1" *-up- "1" eFixStatus
+SimpleExtraProperty "1" *-up- "1" IPropertyValidator
+SimpleMultipleChoiceProperty "1" *-up- "1" SimpleExtraProperty
+SimpleMultipleChoiceProperty "1" *-up- "1" MultipleChoiceValidator
+class ConsoleFrontEnd {
+    void ShowMainMenu()
+}
+
+class FrontEndAction {
+    Description string
+    FrontEndActionDelegate Action
+    RequireVehiclesInDataStore bool
+}
+
+ConsoleFrontEnd "1" *-up- "1" VehicleDataStore
+ConsoleFrontEnd "1" *-up- "many" FrontEndAction
+@enduml

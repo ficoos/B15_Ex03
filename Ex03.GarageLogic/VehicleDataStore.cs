@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Ex03.GarageLogic
 {
-	using System;
-	using System.ComponentModel;
-
 	public class VehicleDataStore
 	{
 		private readonly Dictionary<string, VehicleInfo> r_Vehicles;
@@ -41,12 +39,7 @@ namespace Ex03.GarageLogic
 		public VehicleInfo FindVehicle(string i_Id)
 		{
 			VehicleInfo result;
-			if (!r_Vehicles.TryGetValue(i_Id, out result))
-			{
-				// Make sure result doesn't contain garbage value
-				result = null;
-			}
-
+			r_Vehicles.TryGetValue(i_Id, out result);
 			return result;
 		}
 

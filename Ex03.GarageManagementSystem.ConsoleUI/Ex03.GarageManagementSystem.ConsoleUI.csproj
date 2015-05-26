@@ -40,7 +40,7 @@
     <Compile Include="ConsoleFrontEnd.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UIFunction.cs" />
+    <Compile Include="FrontEndAction.cs" />
     <Compile Include="UserInputHelper.cs" />
   </ItemGroup>
   <ItemGroup>

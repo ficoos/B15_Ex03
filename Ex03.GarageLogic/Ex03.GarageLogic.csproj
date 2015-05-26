@@ -48,7 +48,7 @@
     <Compile Include="NonEmptyStringValidator.cs" />
     <Compile Include="OwnerInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleEnergySource.cs" />
+    <Compile Include="LimitedContainer.cs" />
     <Compile Include="SimpleExtraProperty.cs" />
     <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="VehicleBattery.cs" />

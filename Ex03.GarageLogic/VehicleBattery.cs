@@ -2,7 +2,7 @@
 {
 	public class VehicleBattery : IEnergySource
 	{
-		private readonly SimpleEnergySource r_InnerImplementation;
+		private readonly LimitedContainer r_InnerImplementation;
 
 		public float PercentLeft
 		{
@@ -37,7 +37,7 @@
 		{
 			get
 			{
-				return r_InnerImplementation.EnergyLeft;
+				return r_InnerImplementation.AmountLeft;
 			}
 		}
 
@@ -45,18 +45,18 @@
 		{
 			get
 			{
-				return r_InnerImplementation.MaxEnergy;
+				return r_InnerImplementation.AmountLeft;
 			}
 		}
 
 		public void Charge(float i_Hours)
 		{
-			r_InnerImplementation.AddEnergy(i_Hours);
+			r_InnerImplementation.AddAmount(i_Hours);
 		}
 
 		internal VehicleBattery(float i_EnergyLeft, float i_MaxEnergy)
 		{
-			r_InnerImplementation = new SimpleEnergySource(i_EnergyLeft, i_MaxEnergy);
+			r_InnerImplementation = new LimitedContainer(i_EnergyLeft, i_MaxEnergy);
 		}
 	}
 }

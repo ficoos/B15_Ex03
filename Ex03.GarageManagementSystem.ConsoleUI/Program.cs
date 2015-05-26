@@ -4,9 +4,8 @@
 	{
 		public static void Main()
 		{
-
-            ConsoleFrontEnd FrontEnd = new ConsoleFrontEnd();
-            FrontEnd.MainMenu();
+            ConsoleFrontEnd frontEnd = new ConsoleFrontEnd();
+            frontEnd.ShowMainMenu();
 		}
 	}
 }

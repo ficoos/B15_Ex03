@@ -8,39 +8,28 @@ namespace Ex03.GarageManagementSystem.ConsoleUI
     {
         private readonly VehicleDataStore r_DataStore;
 
-	    private readonly UIFunction[] r_AvailableCommands;
+	    private readonly FrontEndAction[] r_AvailableActions;
 
 		private bool m_IsRunning;
 
-        public ConsoleFrontEnd()
-        {
-            r_DataStore = new VehicleDataStore();
-	        const bool v_RequiresVehiclesInDataStore = true;
-			r_AvailableCommands = new[]
-			{
-				new UIFunction("Insert a new vehicle to the garage", insertVehicleToGarage, !v_RequiresVehiclesInDataStore), 
-				new UIFunction("Show all License numbers of vehicles in the garage", showVehiclesInDataStore, v_RequiresVehiclesInDataStore),
-				new UIFunction("Change vehicle's status", changeVehicleStatus, v_RequiresVehiclesInDataStore),
-				new UIFunction("Inflate wheels", inflateWheels, v_RequiresVehiclesInDataStore),
-				new UIFunction("Fuel a vehicle", fuelVehicle, v_RequiresVehiclesInDataStore),
-				new UIFunction("Charge an electric vehicle", chargeElectricVehicle, v_RequiresVehiclesInDataStore),
-				new UIFunction("Show vehicle's information", showVehicleInformation, v_RequiresVehiclesInDataStore), // TODO
-				new UIFunction("exit", exit, !v_RequiresVehiclesInDataStore),
-			};
-
-	        m_IsRunning = false;
-        }
-
-		private void showVehicleInformation()
+		private static eFuelType askForFuelType()
 		{
-			VehicleInfo vehicle = this.askForExistingVehicle();
-			printBasicVehicleInformation(vehicle);
-			printExtraProperties(vehicle);
-			printEnergySourceInformation(vehicle.EnergySource);
-			printWheelInformation(vehicle.Wheels);
+			string fuelTypeString = UserInputHelper.SelectFromList(
+				"Please select a fuel type",
+				Enum.GetNames(typeof(eFuelType)),
+				StringComparer.CurrentCultureIgnoreCase);
+			return (eFuelType)Enum.Parse(typeof(eFuelType), fuelTypeString);
 		}
 
-		private void printWheelInformation(IEnumerable<WheelInfo> i_Wheels)
+		private static void printVehicleInformation(VehicleInfo i_Vehicle)
+		{
+			printBasicVehicleInformation(i_Vehicle);
+			printExtraProperties(i_Vehicle);
+			printEnergySourceInformation(i_Vehicle.EnergySource);
+			printWheelInformation(i_Vehicle.Wheels);
+		}
+
+		private static void printWheelInformation(IEnumerable<WheelInfo> i_Wheels)
 		{
 			Console.WriteLine("Wheel Information:");
 			int wheelCounter = 1;
@@ -57,13 +46,13 @@ namespace Ex03.GarageManagementSystem.ConsoleUI
 			}
 		}
 
-		private void printEnergySourceInformation(IEnergySource i_EnergySource)
+		private static void printEnergySourceInformation(IEnergySource i_EnergySource)
 		{
 			string units = "hours";
 			string energyDescriptor = "Charge";
 			if (i_EnergySource is FuelTank)
 			{
-				Console.WriteLine("Fuel Type: {0}", (i_EnergySource as FuelTank).FuelType);
+				Console.WriteLine("Fuel Type: {0}", ((FuelTank)i_EnergySource).FuelType);
 				units = "liters";
 				energyDescriptor = "Fuel";
 			}
@@ -77,7 +66,7 @@ namespace Ex03.GarageManagementSystem.ConsoleUI
 				energyDescriptor);
 		}
 
-		private void printExtraProperties(VehicleInfo i_Vehicle)
+		private static void printExtraProperties(VehicleInfo i_Vehicle)
 		{
 			foreach (IExtraProperty property in i_Vehicle.ExtraProperties)
 			{
@@ -85,7 +74,7 @@ namespace Ex03.GarageManagementSystem.ConsoleUI
 			}
 		}
 
-		private void printBasicVehicleInformation(VehicleInfo i_Vehicle)
+		private static void printBasicVehicleInformation(VehicleInfo i_Vehicle)
 		{
 			Console.WriteLine(
 @"--- Vehicle Information ---
@@ -99,68 +88,14 @@ Owner Phone Number: {3}",
 				i_Vehicle.Owner.PhoneNumber);
 		}
 
-		public void MainMenu()
-	    {
-		    m_IsRunning = true;
-			while (m_IsRunning)
-            {
-                Console.Clear();
-	            Console.WriteLine("Welcome to Saggi, Maor and son's Garage!!");
-	            printFunctionList();
-	            int userChoice = UserInputHelper.GetValueFromUser<int>(
-			            "Please enter the number of the action you want to perform",
-			            int.TryParse,
-			            "Please enter a number");
-	            try
-	            {
-		            UIFunction function = r_AvailableCommands[userChoice - 1];
-		            if (function.RequiresVehiclesInDataStore && r_DataStore.IsEmpty)
-		            {
-			            Console.WriteLine("Garage is empty");
-		            }
-		            else
-		            {
-			            function.Function();
-		            }
-	            }
-	            catch (IndexOutOfRangeException)
-	            {
-					Console.WriteLine("Invalid request number, please try again");
-	            }
-				
-                if (m_IsRunning)
-                {
-                    Console.WriteLine("Press any key to go back to main menu.");
-                    Console.ReadKey();
-                }
-            }
-        }
-
-		private void exit()
-		{
-			m_IsRunning = false;
-			Console.WriteLine("Have a nice day!");
-			Console.ReadKey();
-		}
-
-		private void printFunctionList()
-		{
-			int optionCounter = 1;
-			foreach (UIFunction uiFunction in r_AvailableCommands)
-			{
-				Console.WriteLine("{0}) {1}.", optionCounter, uiFunction.Description);
-				optionCounter++;
-			}
-		}
-
-		private OwnerInfo AskForOwnerInformation()
+		private static OwnerInfo askForOwnerInformation()
 		{
 			string ownerName = UserInputHelper.AskForNonEmptyString("Owner's Name");
 			string ownerPhoneNumber = UserInputHelper.AskForNonEmptyString("Owner's Phone Number");
 			return new OwnerInfo(ownerName, ownerPhoneNumber);
 		}
 
-		private void askForExtraProperties(VehicleInfo i_Vehicle)
+		private static void askForExtraProperties(VehicleInfo i_Vehicle)
 		{
 			foreach (IExtraProperty property in i_Vehicle.ExtraProperties)
 			{
@@ -189,6 +124,107 @@ Owner Phone Number: {3}",
 			}
 		}
 
+		private static eFixStatus askForVehicleStatus()
+		{
+			eFixStatus result = eFixStatus.Fixed;
+			string selection = UserInputHelper.SelectFromList(
+				"Please select a vehicle status",
+				new[] { "fixing", "fixed", "payed" },
+				StringComparer.CurrentCultureIgnoreCase);
+			switch (selection)
+			{
+				case "fixed":
+					result = eFixStatus.Fixed;
+					break;
+				case "fixing":
+					result = eFixStatus.Fixing;
+					break;
+				case "payed":
+					result = eFixStatus.Payed;
+					break;
+			}
+
+			return result;
+		}
+
+        public ConsoleFrontEnd()
+        {
+            r_DataStore = new VehicleDataStore();
+	        const bool v_RequiresVehiclesInDataStore = true;
+			this.r_AvailableActions = new[]
+			{
+				new FrontEndAction("Insert a new vehicle to the garage", insertVehicleToGarage, !v_RequiresVehiclesInDataStore), 
+				new FrontEndAction("Show all License numbers of vehicles in the garage", showVehiclesInDataStore, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("Change vehicle's status", changeVehicleStatus, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("Inflate wheels", inflateWheels, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("Fuel a vehicle", fuelVehicle, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("Charge an electric vehicle", chargeElectricVehicle, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("Show vehicle's information", showVehicleInformation, v_RequiresVehiclesInDataStore),
+				new FrontEndAction("exit", exit, !v_RequiresVehiclesInDataStore),
+			};
+
+	        m_IsRunning = false;
+        }
+
+		private void showVehicleInformation()
+		{
+			printVehicleInformation(askForExistingVehicle());
+		}
+
+		public void ShowMainMenu()
+	    {
+		    m_IsRunning = true;
+			while (m_IsRunning)
+            {
+                Console.Clear();
+	            Console.WriteLine("Welcome to Saggi, Maor and son's Garage!!");
+	            printFunctionList();
+	            int userChoice = UserInputHelper.GetValueFromUser<int>(
+			            "Please enter the number of the action you want to perform",
+			            int.TryParse,
+			            "Please enter a number");
+	            try
+	            {
+		            FrontEndAction action = this.r_AvailableActions[userChoice - 1];
+		            if (action.RequiresVehiclesInDataStore && r_DataStore.IsEmpty)
+		            {
+			            Console.WriteLine("Garage is empty");
+		            }
+		            else
+		            {
+			            action.Action();
+		            }
+	            }
+	            catch (IndexOutOfRangeException)
+	            {
+					Console.WriteLine("Invalid request number, please try again");
+	            }
+				
+                if (m_IsRunning)
+                {
+                    Console.WriteLine("Press any key to go back to main menu.");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+		private void exit()
+		{
+			m_IsRunning = false;
+			Console.WriteLine("Have a nice day!");
+			Console.ReadKey();
+		}
+
+		private void printFunctionList()
+		{
+			int optionCounter = 1;
+			foreach (FrontEndAction uiFunction in this.r_AvailableActions)
+			{
+				Console.WriteLine("{0}) {1}.", optionCounter, uiFunction.Description);
+				optionCounter++;
+			}
+		}
+
 		private string askForVehicleType()
 		{
 			return UserInputHelper.SelectFromList(
@@ -210,7 +246,7 @@ Owner Phone Number: {3}",
 			{
 				Console.WriteLine("Please enter the following information:");
 				string vehicleType = askForVehicleType();
-				OwnerInfo owner = AskForOwnerInformation();
+				OwnerInfo owner = askForOwnerInformation();
 				vehicle = r_DataStore.CreateVehicle(vehicleType, licenseNumber, owner);
 				askForExtraProperties(vehicle);
 				askForWheelInformation(vehicle);
@@ -229,10 +265,11 @@ Owner Phone Number: {3}",
 				{
 					try
 					{
-						wheel.AirPressure = UserInputHelper.GetValueFromUser<float>(
+						float amountToAdd = UserInputHelper.GetValueFromUser<float>(
 							"Current Air Pressure",
 							float.TryParse,
 							"Please enter a valid air pressure");
+						wheel.Inflate(amountToAdd);
 						airPressureSet = true;
 					}
 					catch (ValueOutOfRangeException)
@@ -250,17 +287,8 @@ Owner Phone Number: {3}",
 			VehicleInfo vehicle = askForExistingVehicle();
 			foreach (WheelInfo wheel in vehicle.Wheels)
 			{
-				wheel.AirPressure = wheel.MaxAirPressure;
+				wheel.Inflate(wheel.MaxAirPressure - wheel.AirPressure);
 			}
-		}
-
-		private eFuelType askForFuelType()
-		{
-			string fuelTypeString = UserInputHelper.SelectFromList(
-				"Please select a fuel type",
-				Enum.GetNames(typeof(eFuelType)),
-				StringComparer.CurrentCultureIgnoreCase);
-			return (eFuelType)Enum.Parse(typeof(eFuelType), fuelTypeString);
 		}
 
 		private void fuelVehicle()
@@ -275,11 +303,11 @@ Owner Phone Number: {3}",
 			else
 			{
                 eFuelType correctFuelType = fuelTank.FuelType;
-                bool gotRightFuelType = this.askForFuelType() == correctFuelType;
+                bool gotRightFuelType = askForFuelType() == correctFuelType;
                 while (!gotRightFuelType)
                 {
 					Console.WriteLine("Wrong fuel type, please try again");
-	                gotRightFuelType = this.askForFuelType() == correctFuelType;
+	                gotRightFuelType = askForFuelType() == correctFuelType;
                 }
 
 				addToEnergySource(fuelTank, "liters", 1f);
@@ -316,29 +344,6 @@ Owner Phone Number: {3}",
 				addToEnergySource(bettery, "minutes", 1f / 60f);
 			}
         }
-
-		private eFixStatus askForVehicleStatus()
-		{
-			eFixStatus result = eFixStatus.Fixed;
-			string selection = UserInputHelper.SelectFromList(
-				"Please select a vehicle status",
-				new[] { "fixing", "fixed", "payed" },
-				StringComparer.CurrentCultureIgnoreCase);
-			switch (selection)
-			{
-				case "fixed":
-					result = eFixStatus.Fixed;
-					break;
-				case "fixing":
-					result = eFixStatus.Fixing;
-					break;
-				case "payed":
-					result = eFixStatus.Payed;
-					break;
-			}
-
-			return result;
-		}
 
         private void showVehiclesInDataStore()
         {

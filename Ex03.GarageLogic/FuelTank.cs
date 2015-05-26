@@ -2,7 +2,7 @@
 {
 	public class FuelTank : IEnergySource
 	{
-		 private readonly SimpleEnergySource r_InnerImplementation;
+		 private readonly LimitedContainer r_InnerImplementation;
 
 		private readonly eFuelType r_FuelType;
 
@@ -47,7 +47,7 @@
 		{
 			get
 			{
-				return r_InnerImplementation.EnergyLeft;
+				return r_InnerImplementation.AmountLeft;
 			}
 		}
 
@@ -55,18 +55,18 @@
 		{
 			get
 			{
-				return r_InnerImplementation.MaxEnergy;
+				return r_InnerImplementation.MaxAmount;
 			}
 		}
 
 		public void AddFuel(float i_Liters)
 		{
-			r_InnerImplementation.AddEnergy(i_Liters);
+			r_InnerImplementation.AddAmount(i_Liters);
 		}
 
 		internal FuelTank(float i_LitersLeft, float i_TankCapacity, eFuelType i_FuelType)
 		{
-			r_InnerImplementation = new SimpleEnergySource(i_LitersLeft, i_TankCapacity);
+			r_InnerImplementation = new LimitedContainer(i_LitersLeft, i_TankCapacity);
 			r_FuelType = i_FuelType;
 		}
 	}

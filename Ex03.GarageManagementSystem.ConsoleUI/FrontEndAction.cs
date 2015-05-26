@@ -1,8 +1,8 @@
 ﻿namespace Ex03.GarageManagementSystem.ConsoleUI
 {
-	public struct UIFunction
+	public struct FrontEndAction
 	{
-		public delegate void UIFunctionDelegate();
+		public delegate void FrontEndActionDelegate();
 
 		private readonly string r_Description;
 
@@ -14,13 +14,13 @@
 			}
 		}
 
-		private readonly UIFunctionDelegate r_Function;
+		private readonly FrontEndActionDelegate r_Action;
 
-		public UIFunctionDelegate Function
+		public FrontEndActionDelegate Action
 		{
 			get
 			{
-				return r_Function;
+				return this.r_Action;
 			}
 		}
 
@@ -34,10 +34,10 @@
 			}
 		}
 
-		public UIFunction(string i_Description, UIFunctionDelegate i_Function, bool i_RequiresVehiclesInDataStore)
+		public FrontEndAction(string i_Description, FrontEndActionDelegate i_Action, bool i_RequiresVehiclesInDataStore)
 		{
 			r_Description = i_Description;
-			r_Function = i_Function;
+			this.r_Action = i_Action;
 			r_RequiresVehiclesInDataStore = i_RequiresVehiclesInDataStore;
 		}
 	}
